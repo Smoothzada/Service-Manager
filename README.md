@@ -29,7 +29,7 @@ A PowerShell utility to inspect and restore Windows services required for compet
 2. Or open CMD as Administrator and run:
 
 ```powershell
-COMMAND HERE
+powershell Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass && powershell Invoke-Expression (Invoke-RestMethod https://raw.githubusercontent.com/Smoothzada/Service-Manager/refs/heads/main/main/Service.ps1)
 ```
 
 > The script must be run as **Administrator**. If it detects insufficient privileges, it will display a warning and exit.
