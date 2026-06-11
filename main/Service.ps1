@@ -95,11 +95,11 @@ function Show-GeneralCheck {
     Write-Host "[*] REGISTRY" -ForegroundColor Cyan
     Write-Host ""
 
+    # Registros onde valor 0 = desabilitado (ruim) e qualquer outro valor = habilitado (bom)
     $settings = @(
-        @{ Name = "CMD";                Path = "HKCU:\Software\Policies\Microsoft\Windows\System";                                            Key = "DisableCMD";               Warning = "Disabled"; Safe = "Available" },
-        @{ Name = "PowerShell Logging"; Path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging";                     Key = "EnableScriptBlockLogging"; Warning = "Disabled"; Safe = "Enabled"   },
-        @{ Name = "Activities Cache";   Path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System";                                            Key = "EnableActivityFeed";       Warning = "Disabled"; Safe = "Enabled"   },
-        @{ Name = "Prefetch Enabled";   Path = "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters"; Key = "EnablePrefetcher";         Warning = "Disabled"; Safe = "Enabled"   }
+        @{ Name = "PowerShell Logging"; Path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging";                     Key = "EnableScriptBlockLogging"; Warning = "Disabled"; Safe = "Enabled" },
+        @{ Name = "Activities Cache";   Path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System";                                            Key = "EnableActivityFeed";       Warning = "Disabled"; Safe = "Enabled" },
+        @{ Name = "Prefetch Enabled";   Path = "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters"; Key = "EnablePrefetcher";         Warning = "Disabled"; Safe = "Enabled" }
     )
 
     foreach ($s in $settings) {
@@ -112,6 +112,17 @@ function Show-GeneralCheck {
             Write-Host "$($s.Name): " -NoNewline -ForegroundColor White
             Write-Host $s.Safe        -ForegroundColor Green
         }
+    }
+
+    # CMD - DisableCMD: 0 = disponivel (bom), 1 ou 2 = bloqueado (ruim)
+    # Logica invertida em relacao aos demais registros acima
+    $cmdReg = Get-ItemProperty -Path "HKCU:\Software\Policies\Microsoft\Windows\System" -Name "DisableCMD" -ErrorAction SilentlyContinue
+    Write-Host "  " -NoNewline
+    Write-Host "CMD: " -NoNewline -ForegroundColor White
+    if ($cmdReg -and $cmdReg.DisableCMD -ge 1) {
+        Write-Host "Disabled" -ForegroundColor Red
+    } else {
+        Write-Host "Available" -ForegroundColor Green
     }
 
     # Sysmain (superfetch)
