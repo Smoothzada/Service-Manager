@@ -95,7 +95,6 @@ function Show-GeneralCheck {
     Write-Host "[*] REGISTRY" -ForegroundColor Cyan
     Write-Host ""
 
-    # Registros onde valor 0 = desabilitado (ruim) e qualquer outro valor = habilitado (bom)
     $settings = @(
         @{ Name = "PowerShell Logging"; Path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging";                     Key = "EnableScriptBlockLogging"; Warning = "Disabled"; Safe = "Enabled" },
         @{ Name = "Activities Cache";   Path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System";                                            Key = "EnableActivityFeed";       Warning = "Disabled"; Safe = "Enabled" },
@@ -114,8 +113,6 @@ function Show-GeneralCheck {
         }
     }
 
-    # CMD - DisableCMD: 0 = disponivel (bom), 1 ou 2 = bloqueado (ruim)
-    # Logica invertida em relacao aos demais registros acima
     $cmdReg = Get-ItemProperty -Path "HKCU:\Software\Policies\Microsoft\Windows\System" -Name "DisableCMD" -ErrorAction SilentlyContinue
     Write-Host "  " -NoNewline
     Write-Host "CMD: " -NoNewline -ForegroundColor White
